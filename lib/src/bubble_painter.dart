@@ -1,32 +1,41 @@
 part of 'bubble_picker_widget.dart';
 
+/// A custom painter that handles rendering of bubbles within the [BubblePicker] widget.
 class _BubblePainter extends CustomPainter {
-  final List<Bubble> bubbles;
+  /// List of bubbles to be painted.
+  final List<_Bubble> bubbles;
 
+  /// Creates a [_BubblePainter] instance.
   _BubblePainter(this.bubbles);
 
+  /// Paints the bubbles on the provided canvas.
+  ///
+  /// This method is called automatically when the widget needs to be repainted.
+  /// It iterates over the list of bubbles, drawing each one based on its properties.
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint();
+    final paint = Paint(); // Paint object used to draw the bubbles
+
+    // Iterate through each bubble in the list
     for (var bubble in bubbles) {
-      // 캔버스 상태 저장
+      // Save the current canvas state
       canvas.save();
 
-      // 동그라미 클립 경로 설정
+      // Create a clipping path in the shape of a circle for the bubble
       Path clipPath = Path()..addOval(Rect.fromCircle(center: Offset(bubble.dx, bubble.dy), radius: bubble.radius));
       canvas.clipPath(clipPath);
 
       if (bubble.image != null) {
-        // 이미지 배경을 그리기
+        // If the bubble has an image, draw it as the background
         paintImage(
           canvas: canvas,
           rect: Rect.fromCircle(center: Offset(bubble.dx, bubble.dy), radius: bubble.radius),
           image: bubble.image!,
-          fit: bubble.boxFit ?? BoxFit.cover,
-          colorFilter: bubble.colorFilter,
+          fit: bubble.boxFit ?? BoxFit.cover, // Use BoxFit.cover by default
+          colorFilter: bubble.colorFilter, // Apply the color filter if specified
         );
       } else {
-        // 컬러 배경을 그리기
+        // If no image is provided, draw a solid color background
         paint.color = bubble.color;
         canvas.drawCircle(
           Offset(bubble.dx, bubble.dy),
@@ -35,11 +44,14 @@ class _BubblePainter extends CustomPainter {
         );
       }
 
-      // 캔버스 상태 복원
+      // Restore the previous canvas state
       canvas.restore();
     }
   }
 
+  /// Determines whether the painter should repaint.
+  ///
+  /// Returns `true` to indicate that the painter should repaint when the widget is rebuilt.
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
