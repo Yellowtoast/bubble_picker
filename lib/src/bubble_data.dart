@@ -13,9 +13,10 @@ class BubbleData {
     this.radius,
     this.child,
     this.onTapBubble,
-    this.image,
+    this.imageProvider,
     this.colorFilter,
     this.boxFit,
+    this.gradient,
   }) : assert(
           radius == null || (radius > 0 && radius < 1),
           'Radius must be greater than 0 and less than 1 if provided',
@@ -23,7 +24,7 @@ class BubbleData {
 
   /// The background color of the bubble.
   ///
-  /// If an [image] is provided, this color is ignored unless a [colorFilter] is applied.
+  /// If an [imageProvider] is provided, this color is ignored unless a [colorFilter] is applied.
   final Color? color;
 
   /// The radius of the bubble, specified as a fraction of the widget's height.
@@ -44,15 +45,21 @@ class BubbleData {
   /// An optional image to be used as the bubble's background.
   ///
   /// If provided, this image is drawn inside the bubble using the specified [boxFit] and [colorFilter].
-  final ImageProvider? image;
+  final ImageProvider? imageProvider;
 
-  /// An optional color filter to apply to the [image] if one is provided.
+  /// An optional color filter to apply to the [imageProvider] if one is provided.
   ///
   /// This can be used to tint the image or apply a blending effect.
   final ColorFilter? colorFilter;
 
-  /// The fit strategy to use when drawing the [image] inside the bubble.
+  /// The fit strategy to use when drawing the [imageProvider] inside the bubble.
   ///
   /// Defaults to [BoxFit.cover] if not specified, ensuring the image covers the entire bubble.
   final BoxFit? boxFit;
+
+  /// An optional gradient to be used as the background of the bubble.
+  ///
+  /// If a [gradient] is provided, it will be drawn in place of the [color] or [imageProvider].
+  /// The gradient will cover the entire bubble.
+  final Gradient? gradient;
 }

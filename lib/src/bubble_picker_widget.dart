@@ -67,7 +67,7 @@ class _BubblePickerState extends State<BubblePicker> with SingleTickerProviderSt
   Future<void> _initializeBubbles() async {
     bubbles = [];
     for (var bubbleData in widget.bubbles) {
-      final image = await loadImage(bubbleData.image); // Load the image for the bubble
+      final image = await loadImage(bubbleData.imageProvider); // Load the image for the bubble
       bubbles.add(
         _Bubble.fromOptions(
           Offset(clusterCenter.dx, clusterCenter.dy),

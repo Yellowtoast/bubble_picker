@@ -27,7 +27,7 @@ void main() {
               numberOfBubbles,
               (index) => const BubbleData(
                 color: Colors.red,
-                image: AssetImage('assets/image1.jpeg'),
+                imageProvider: AssetImage('assets/image1.jpeg'),
                 colorFilter: ColorFilter.mode(
                   Colors.transparent,
                   BlendMode.srcOver,
@@ -57,7 +57,7 @@ void main() {
             bubbles: [
               BubbleData(
                 color: Colors.red,
-                image: const AssetImage(
+                imageProvider: const AssetImage(
                   'assets/image1.jpeg',
                 ),
                 colorFilter: ColorFilter.mode(
@@ -91,7 +91,7 @@ void main() {
         () => BubbleData(
               radius: 0, // Should trigger assertion
               color: Colors.red,
-              image: const AssetImage('assets/image1.jpeg'),
+              imageProvider: const AssetImage('assets/image1.jpeg'),
               colorFilter: const ColorFilter.mode(
                 Colors.transparent,
                 BlendMode.srcOver,

@@ -1,42 +1,55 @@
 part of 'bubble_picker_widget.dart';
 
-/// The [_Bubble] class represents a single bubble within the [BubblePicker] widget.
-/// Each bubble has properties such as position, size, color, velocity, and can interact with other bubbles.
+/// [_Bubble] represents a single bubble within the [BubblePicker] widget.
+/// It encapsulates properties such as position, size, color, and image, and
+/// handles the update logic for movement and interaction with other bubbles.
 class _Bubble {
-  /// Callback triggered when the bubble is tapped. Receives the updated radius.
+  /// A callback triggered when the bubble is tapped.
+  /// It passes the current radius of the bubble to the callback function.
   final void Function(double radius)? onTapBubble;
 
-  /// The image to be displayed inside the bubble, if any.
+  /// The image to be displayed inside the bubble, if provided.
+  /// This image is drawn using the specified [boxFit] and [colorFilter].
   final ui.Image? image;
 
-  /// Optional color filter applied to the image inside the bubble.
+  /// An optional color filter to apply to the [image].
+  /// This can be used to apply effects such as tinting the image.
   final ColorFilter? colorFilter;
 
-  /// Defines how the image should be fit inside the bubble.
+  /// The fit strategy to use when drawing the [image] inside the bubble.
+  /// Defaults to [BoxFit.cover] if not specified, ensuring the image covers the entire bubble.
   final BoxFit? boxFit;
 
-  /// X-coordinate of the bubble's position.
+  /// An optional gradient to be used as the background of the bubble.
+  /// If provided, this gradient will be drawn in place of the [color] or [image].
+  final Gradient? gradient;
+
+  /// X-coordinate position of the bubble on the screen.
   double dx;
 
-  /// Y-coordinate of the bubble's position.
+  /// Y-coordinate position of the bubble on the screen.
   double dy;
 
-  /// Radius of the bubble.
+  /// The radius of the bubble, which controls its size.
   double radius;
 
-  /// Background color of the bubble.
+  /// The background color of the bubble.
+  /// This color is used if no [image] or [gradient] is provided.
   Color color;
 
-  /// The current velocity of the bubble, influencing its movement.
+  /// The current velocity of the bubble, used for animating movement.
   Offset velocity;
 
   /// The offset from the cluster center where the bubble originated.
   Offset offsetFromCenter;
 
-  /// Optional widget to be displayed inside the bubble (e.g., an icon or text).
+  /// An optional widget to be displayed inside the bubble, such as text or an icon.
   Widget? child;
 
-  /// Constructor for creating a [_Bubble] instance.
+  /// Constructs a [_Bubble] object with the specified properties.
+  ///
+  /// The [dx], [dy], [radius], [color], [velocity], and [offsetFromCenter] parameters are required.
+  /// The [child], [onTapBubble], [image], [colorFilter], [boxFit], and [gradient] parameters are optional.
   _Bubble({
     required this.dx,
     required this.dy,
@@ -49,18 +62,14 @@ class _Bubble {
     this.image,
     this.colorFilter,
     this.boxFit,
+    this.gradient,
   });
 
-  /// Factory method to create a [_Bubble] instance with randomized initial properties.
+  /// Creates a [_Bubble] object with random initial properties based on the given [center].
   ///
-  /// [center]: The initial center of the cluster of bubbles.
-  /// [color]: The background color of the bubble.
-  /// [radius]: The initial radius of the bubble. If not provided, a random value is used.
-  /// [child]: An optional widget to display inside the bubble.
-  /// [onTapBubble]: Callback to trigger when the bubble is tapped.
-  /// [image]: An optional image to display as the background of the bubble.
-  /// [colorFilter]: An optional color filter for the image.
-  /// [boxFit]: Specifies how the image should be fit inside the bubble.
+  /// The [center] determines the initial position of the bubble. Optional parameters allow
+  /// for customization of the bubble's appearance, such as [color], [radius], [child], [image],
+  /// [colorFilter], [boxFit], and [gradient]. If not provided, random values are used.
   factory _Bubble.fromOptions(
     Offset center, {
     Color? color,
@@ -70,6 +79,7 @@ class _Bubble {
     ui.Image? image,
     ColorFilter? colorFilter,
     BoxFit? boxFit,
+    Gradient? gradient,
   }) {
     final random = Random();
     double angle = random.nextDouble() * 2 * pi;
@@ -78,7 +88,7 @@ class _Bubble {
     return _Bubble(
       dx: center.dx + offsetFromCenter.dx,
       dy: center.dy + offsetFromCenter.dy,
-      radius: (radius ?? random.nextDouble()) * 20 + 20, // Randomize the radius if not provided
+      radius: (radius ?? random.nextDouble()) * 20 + 20,
       color: color ?? Color.fromRGBO(random.nextInt(256), random.nextInt(256), random.nextInt(256), 1),
       velocity: Offset(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1),
       offsetFromCenter: offsetFromCenter,
@@ -87,17 +97,17 @@ class _Bubble {
       image: image,
       colorFilter: colorFilter,
       boxFit: boxFit,
+      gradient: gradient,
     );
   }
 
-  /// Updates the position and velocity of the bubble based on its interactions with other bubbles
-  /// and the cluster center.
+  /// Updates the bubble's position and velocity based on attraction to the cluster center,
+  /// repulsion from other bubbles, and collisions with screen boundaries.
   ///
-  /// [bubbles]: List of all bubbles in the picker.
-  /// [clusterCenter]: The current center point of the bubble cluster.
-  /// [screenSize]: The size of the screen or widget where the bubbles are displayed.
-  /// [attractionStrength]: The strength of the force pulling the bubble towards the cluster center.
-  /// [repulsionStrength]: The strength of the force pushing the bubbles away from each other.
+  /// The [bubbles] list contains all bubbles in the cluster, [clusterCenter] is the central point
+  /// of the cluster, and [screenSize] defines the size of the screen for boundary detection.
+  /// The [attractionStrength] controls the force pulling bubbles towards the center,
+  /// while [repulsionStrength] controls the force pushing bubbles away from each other.
   void update(
     List<_Bubble> bubbles,
     Offset clusterCenter,
@@ -105,56 +115,55 @@ class _Bubble {
     double attractionStrength,
     double repulsionStrength,
   ) {
-    // Apply attraction force towards the cluster center
+    // Calculate the attraction force towards the cluster center.
     Offset attraction = (clusterCenter - Offset(dx, dy)) * attractionStrength;
     velocity += attraction;
 
-    // Apply damping to the velocity to reduce its magnitude over time
-    velocity = Offset(velocity.dx * 0.98, velocity.dy * 0.98); // Adjust damping
+    // Apply damping to slow down the velocity over time.
+    velocity = Offset(velocity.dx * 0.98, velocity.dy * 0.98);
 
-    // Calculate new position based on velocity
+    // Update the bubble's position based on its current velocity.
     dx += velocity.dx;
     dy += velocity.dy;
 
     for (var bubble in bubbles) {
-      if (bubble == this) continue; // Skip self in the interaction loop
-
+      if (bubble == this) continue; // Skip self to avoid self-collision.
       double distance = (Offset(dx, dy) - Offset(bubble.dx, bubble.dy)).distance;
       double minDistance = radius + bubble.radius;
 
       if (distance < minDistance) {
-        // Apply soft repulsion force to avoid overlapping
+        // Calculate overlap and apply repulsion force to avoid overlapping.
         double overlap = minDistance - distance;
         Offset direction = (Offset(dx, dy) - Offset(bubble.dx, bubble.dy)).normalize();
         Offset repulsion = direction * overlap * repulsionStrength;
 
-        // Adjust positions based on the repulsion force
+        // Adjust positions to resolve the overlap.
         dx += repulsion.dx;
         dy += repulsion.dy;
         bubble.dx -= repulsion.dx;
         bubble.dy -= repulsion.dy;
 
-        // Adjust velocities after collision for bounce effect
+        // Apply damping to simulate collision energy loss.
         velocity = Offset(velocity.dx * 0.8, velocity.dy * 0.8);
         bubble.velocity = Offset(bubble.velocity.dx * 0.8, bubble.velocity.dy * 0.8);
       }
     }
 
-    // Apply boundary constraints to ensure bubbles stay within screen bounds
+    // Handle collisions with screen boundaries by bouncing the bubble back.
     if (dx - radius < 0) {
       dx = radius;
-      velocity = Offset(-velocity.dx * 0.8, velocity.dy); // Reflect velocity at the boundary
+      velocity = Offset(-velocity.dx * 0.8, velocity.dy);
     } else if (dx + radius > screenSize.width) {
       dx = screenSize.width - radius;
-      velocity = Offset(-velocity.dx * 0.8, velocity.dy); // Reflect velocity at the boundary
+      velocity = Offset(-velocity.dx * 0.8, velocity.dy);
     }
 
     if (dy - radius < 0) {
       dy = radius;
-      velocity = Offset(velocity.dx, -velocity.dy * 0.8); // Reflect velocity at the boundary
+      velocity = Offset(velocity.dx, -velocity.dy * 0.8);
     } else if (dy + radius > screenSize.height) {
       dy = screenSize.height - radius;
-      velocity = Offset(velocity.dx, -velocity.dy * 0.8); // Reflect velocity at the boundary
+      velocity = Offset(velocity.dx, -velocity.dy * 0.8);
     }
   }
 }
