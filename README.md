@@ -1,6 +1,5 @@
 
-
-![ezgif-3-c88dea7e4e](https://github.com/user-attachments/assets/f9b11cdc-6b67-4d93-86b5-5bb4d2dab884)
+![resized](https://github.com/user-attachments/assets/66aef270-7e12-4452-be69-b210d4c9f3d1)
 
 # Bubble Picker
 
