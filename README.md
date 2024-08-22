@@ -1,39 +1,129 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+# Bubble Picker
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A customizable and interactive bubble picker widget for Flutter. This widget displays a collection of bubbles that are attracted to a central point while repelling each other. Users can interact with the bubbles by tapping or dragging them around.
+
+## Table of Contents
+
+- [Bubble Picker](#bubble-picker)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Customization](#customization)
+    - [BubbleData Properties](#bubbledata-properties)
+  - [Contributions](#contributions)
+  - [License](#license)
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Interactive Bubbles**: Bubbles can be dragged, tapped, and will respond to user interactions.
+- **Customizable Appearance**: Customize the color, size, image, and gradient of each bubble.
+- **Dynamic Animations**: Bubbles smoothly animate towards a central point and repel each other.
+- **Flexible Configuration**: Define bubbles with child widgets, images, and custom behaviors.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add the following to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  bubble_picker: ^1.0.0
+```
+
+Then run:
+```bash
+  flutter pub get
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Import the `BubblePicker` widget into your Dart file:
 
 ```dart
-const like = 'sample';
+  import 'package:bubble_picker/bubble_picker.dart';
 ```
+Create a `BubblePicker` widget:
+```dart
 
-## Additional information
+BubblePicker(
+  size: Size(400, 800),
+  bubbles: [
+    BubbleData(
+      color: Colors.blue,
+      radius: 0.1,
+      child: Icon(Icons.star, color: Colors.white),
+    ),
+    BubbleData(
+      imageProvider: AssetImage('assets/images/bubble.png'),
+      radius: 0.15,
+    ),
+    // Add more bubbles here
+  ],
+)
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```
+## Example
+
+Import the `BubblePicker` widget into your Dart file:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:bubble_picker/bubble_picker.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Bubble Picker Example'),
+        ),
+        body: Center(
+          child: BubblePicker(
+            size: Size(400, 800),
+            bubbles: [
+              BubbleData(
+                color: Colors.red,
+                radius: 0.1,
+                child: Text('A'),
+              ),
+              BubbleData(
+                imageProvider: AssetImage('assets/bubble_image.png'),
+                radius: 0.2,
+              ),
+              // Add more bubbles here
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+```
+## Customization
+
+### BubbleData Properties
+
+- **`color`**: The background color of the bubble.
+- **`radius`**: The radius of the bubble as a fraction of the widget's height.
+- **`child`**: A widget to be displayed at the center of the bubble.
+- **`onTapBubble`**: A callback that is triggered when the bubble is tapped.
+- **`imageProvider`**: An image to be used as the background of the bubble.
+- **`colorFilter`**: A color filter applied to the background image.
+- **`boxFit`**: How the background image should be inscribed into the bubble.
+- **`gradient`**: A gradient to be used as the background of the bubble.
+
+## Contributions
+
+Contributions are welcome! If you find any issues or have suggestions, feel free to open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
