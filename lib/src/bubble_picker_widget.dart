@@ -4,9 +4,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-part 'bubble.dart';
-part 'bubble_data.dart';
 part 'bubble_painter.dart';
+part 'class/bubble.dart';
+part 'class/bubble_data.dart';
+part 'util/kalman_filter.dart';
 
 /// A custom widget that displays a collection of interactive bubbles.
 /// The bubbles are attracted towards a central point and repelled from each other.
@@ -151,7 +152,7 @@ extension NormalizeOffset on Offset {
 }
 
 /// Asynchronously loads an image from an [ImageProvider].
-/// Returns a [ui.Image] that can be used for drawing, or `null` if no image provider is given.
+/// Returns a [ui.Image] that can be used for drawing, or null if no image provider is given.
 Future<ui.Image?> loadImage(ImageProvider? provider) async {
   if (provider == null) return null;
   final completer = Completer<ui.Image>();

@@ -1,8 +1,9 @@
-part of 'bubble_picker_widget.dart';
+part of '../bubble_picker_widget.dart';
 
 /// [_Bubble] represents a single bubble within the [BubblePicker] widget.
 /// It encapsulates properties such as position, size, color, and image, and
-/// handles the update logic for movement and interaction with other bubbles.
+/// handles the update logic for movement and interaction with other bubbles,
+/// incorporating a Kalman filter for more accurate position estimation.
 class _Bubble {
   /// A callback triggered when the bubble is tapped.
   /// It passes the current radius of the bubble to the callback function.
@@ -46,7 +47,13 @@ class _Bubble {
   /// An optional widget to be displayed inside the bubble, such as text or an icon.
   Widget? child;
 
-  /// Constructs a [_Bubble] object with the specified properties.
+  /// Kalman filter for smoothing the x-coordinate of the bubble's position.
+  final _KalmanFilter kfX;
+
+  /// Kalman filter for smoothing the y-coordinate of the bubble's position.
+  final _KalmanFilter kfY;
+
+  /// Constructs a [_Bubble] object with the specified properties and initializes Kalman filters.
   ///
   /// The [dx], [dy], [radius], [color], [velocity], and [offsetFromCenter] parameters are required.
   /// The [child], [onTapBubble], [image], [colorFilter], [boxFit], and [gradient] parameters are optional.
@@ -63,7 +70,8 @@ class _Bubble {
     this.colorFilter,
     this.boxFit,
     this.gradient,
-  });
+  })  : kfX = _KalmanFilter(q: 1, r: 1, p: 1, x: dx),
+        kfY = _KalmanFilter(q: 1, r: 1, p: 1, x: dy);
 
   /// Creates a [_Bubble] object with random initial properties based on the given [center].
   ///
@@ -104,6 +112,7 @@ class _Bubble {
   /// Updates the bubble's position and velocity based on attraction to the cluster center,
   /// repulsion from other bubbles, and collisions with screen boundaries.
   ///
+  /// This version uses Kalman filters to predict the new position for smoother motion.
   /// The [bubbles] list contains all bubbles in the cluster, [clusterCenter] is the central point
   /// of the cluster, and [screenSize] defines the size of the screen for boundary detection.
   /// The [attractionStrength] controls the force pulling bubbles towards the center,
@@ -122,9 +131,12 @@ class _Bubble {
     // Apply damping to slow down the velocity over time.
     velocity = Offset(velocity.dx * 0.98, velocity.dy * 0.98);
 
-    // Update the bubble's position based on its current velocity.
-    dx += velocity.dx;
-    dy += velocity.dy;
+    // Predict the new position using Kalman filter.
+    double predictedDx = kfX.update(dx + velocity.dx);
+    double predictedDy = kfY.update(dy + velocity.dy);
+
+    dx = predictedDx;
+    dy = predictedDy;
 
     for (var bubble in bubbles) {
       if (bubble == this) continue; // Skip self to avoid self-collision.

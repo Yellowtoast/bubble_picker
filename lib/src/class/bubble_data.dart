@@ -1,4 +1,4 @@
-part of 'bubble_picker_widget.dart';
+part of '../bubble_picker_widget.dart';
 
 /// [BubbleData] is a configuration class that defines the properties of a bubble
 /// within the [BubblePicker] widget. It provides options for customizing the
