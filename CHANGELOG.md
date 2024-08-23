@@ -1,2 +1,2 @@
-## 0.0.2
-* Apply Kalman Filter
+## 0.0.3
+* Applied color and gradient overlay

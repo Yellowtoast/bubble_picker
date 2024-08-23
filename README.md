@@ -12,7 +12,7 @@ A customizable and interactive bubble picker widget for Flutter. This widget dis
   - [Installation](#installation)
   - [Usage](#usage)
   - [Customization](#customization)
-    - [BubbleData Properties](#bubbledata-properties)
+    - [BubbleData properties](#bubbledata-properties)
   - [Contributions](#contributions)
   - [License](#license)
 
@@ -23,19 +23,6 @@ A customizable and interactive bubble picker widget for Flutter. This widget dis
 - **Dynamic Animations**: Bubbles smoothly animate towards a central point and repel each other.
 - **Flexible Configuration**: Define bubbles with child widgets, images, and custom behaviors.
 
-## Installation
-
-Add the following to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  bubble_picker: ^1.0.0
-```
-
-Then run:
-```bash
-  flutter pub get
-```
 
 ## Usage
 
@@ -95,7 +82,22 @@ class MyApp extends StatelessWidget {
               ),
               BubbleData(
                 imageProvider: AssetImage('assets/bubble_image.png'),
+              ),
+              BubbleData(
+                imageProvider: AssetImage('assets/bubble_image.png'),
+                color: Colors.red.withOpacity(0.3),
                 radius: 0.2,
+              ),
+              BubbleData(
+                imageProvider: AssetImage('assets/bubble_image.png'),
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFFFF6A88).withOpacity(0.5),
+                    const Color(0xFFFFD194).withOpacity(0.5),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
               // Add more bubbles here
             ],
@@ -111,14 +113,14 @@ class MyApp extends StatelessWidget {
 
 ### BubbleData Properties
 
-- **`color`**: The background color of the bubble.
+- **`color`**: The background color of the bubble. it will be applied as an overlay on top of the `imageProvider` (if any).
 - **`radius`**: The radius of the bubble as a fraction of the widget's height.
 - **`child`**: A widget to be displayed at the center of the bubble.
 - **`onTapBubble`**: A callback that is triggered when the bubble is tapped.
 - **`imageProvider`**: An image to be used as the background of the bubble.
 - **`colorFilter`**: A color filter applied to the background image.
 - **`boxFit`**: How the background image should be inscribed into the bubble.
-- **`gradient`**: A gradient to be used as the background of the bubble.
+- **`gradient`**: A gradient to be used as the background of the bubble. it will be applied as an overlay on top of the `imageProvider` (if any).
 
 ## Contributions
 

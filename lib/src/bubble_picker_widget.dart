@@ -69,14 +69,12 @@ class _BubblePickerState extends State<BubblePicker> with SingleTickerProviderSt
     bubbles = [];
     for (var bubbleData in widget.bubbles) {
       final image = await loadImage(bubbleData.imageProvider); // Load the image for the bubble
+
       bubbles.add(
-        _Bubble.fromOptions(
+        _Bubble.fromData(
           Offset(clusterCenter.dx, clusterCenter.dy),
+          data: bubbleData,
           image: image,
-          color: bubbleData.color,
-          radius: bubbleData.radius,
-          colorFilter: bubbleData.colorFilter,
-          child: bubbleData.child,
         ),
       );
     }

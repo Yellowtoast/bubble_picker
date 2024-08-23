@@ -44,6 +44,18 @@ class _BubblePainter extends CustomPainter {
         );
       }
 
+      if (bubble.gradient != null) {
+        // If a gradient is specified, apply it as an overlay
+        paint.shader = bubble.gradient!.createShader(
+          Rect.fromCircle(center: Offset(bubble.dx, bubble.dy), radius: bubble.radius),
+        );
+        canvas.drawCircle(
+          Offset(bubble.dx, bubble.dy),
+          bubble.radius,
+          paint,
+        );
+      }
+
       // Restore the previous canvas state
       canvas.restore();
     }
@@ -51,7 +63,7 @@ class _BubblePainter extends CustomPainter {
 
   /// Determines whether the painter should repaint.
   ///
-  /// Returns true to indicate that the painter should repaint when the widget is rebuilt.
+  /// Returns `true` to indicate that the painter should repaint when the widget is rebuilt.
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;

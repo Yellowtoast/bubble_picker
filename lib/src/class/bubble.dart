@@ -78,16 +78,10 @@ class _Bubble {
   /// The [center] determines the initial position of the bubble. Optional parameters allow
   /// for customization of the bubble's appearance, such as [color], [radius], [child], [image],
   /// [colorFilter], [boxFit], and [gradient]. If not provided, random values are used.
-  factory _Bubble.fromOptions(
+  factory _Bubble.fromData(
     Offset center, {
-    Color? color,
-    double? radius,
-    Widget? child,
-    void Function(double radius)? onTapBubble,
+    required BubbleData data,
     ui.Image? image,
-    ColorFilter? colorFilter,
-    BoxFit? boxFit,
-    Gradient? gradient,
   }) {
     final random = Random();
     double angle = random.nextDouble() * 2 * pi;
@@ -96,16 +90,16 @@ class _Bubble {
     return _Bubble(
       dx: center.dx + offsetFromCenter.dx,
       dy: center.dy + offsetFromCenter.dy,
-      radius: (radius ?? random.nextDouble()) * 20 + 20,
-      color: color ?? Color.fromRGBO(random.nextInt(256), random.nextInt(256), random.nextInt(256), 1),
+      radius: (data.radius ?? random.nextDouble()) * 20 + 20,
+      color: data.color ?? Color.fromRGBO(random.nextInt(256), random.nextInt(256), random.nextInt(256), 1),
       velocity: Offset(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1),
       offsetFromCenter: offsetFromCenter,
-      child: child,
-      onTapBubble: onTapBubble,
+      child: data.child,
+      onTapBubble: data.onTapBubble,
       image: image,
-      colorFilter: colorFilter,
-      boxFit: boxFit,
-      gradient: gradient,
+      colorFilter: data.colorFilter,
+      boxFit: data.boxFit,
+      gradient: data.gradient,
     );
   }
 

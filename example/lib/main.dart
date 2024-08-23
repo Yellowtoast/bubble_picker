@@ -49,8 +49,11 @@ class GradientBubblePicker extends StatelessWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      const LinearGradient(
-        colors: [Color(0xFFFF6A88), Color(0xFFFFD194)],
+      LinearGradient(
+        colors: [
+          const Color(0xFFFF6A88).withOpacity(0.5),
+          const Color(0xFFFFD194).withOpacity(0.5),
+        ],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
@@ -70,6 +73,9 @@ class GradientBubblePicker extends StatelessWidget {
       child: BubblePicker(
         bubbles: List.generate(emotions.length, (index) {
           return BubbleData(
+            imageProvider: const NetworkImage(
+              'https://flexible.img.hani.co.kr/flexible/normal/970/644/imgdb/resize/2019/0404/00503871_20190404.JPG',
+            ),
             gradient: gradients[index],
             child: Text(
               emotions[index],

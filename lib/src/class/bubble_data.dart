@@ -17,14 +17,19 @@ class BubbleData {
     this.colorFilter,
     this.boxFit,
     this.gradient,
-  }) : assert(
+  })  : assert(
           radius == null || (radius > 0 && radius < 1),
           'Radius must be greater than 0 and less than 1 if provided',
+        ),
+        assert(
+          !(color != null && gradient != null),
+          'Only one of color or gradient should be provided.',
         );
 
-  /// The background color of the bubble.
+  /// An optional color to be used as the background of the bubble.
   ///
-  /// If an [imageProvider] is provided, this color is ignored unless a [colorFilter] is applied.
+  /// If an [imageProvider] is also provided, the color will be applied
+  /// as an overlay on top of the image.
   final Color? color;
 
   /// The radius of the bubble, specified as a fraction of the widget's height.
@@ -59,7 +64,7 @@ class BubbleData {
 
   /// An optional gradient to be used as the background of the bubble.
   ///
-  /// If a [gradient] is provided, it will be drawn in place of the [color] or [imageProvider].
-  /// The gradient will cover the entire bubble.
+  /// If an [imageProvider] is also provided, the gradient will be applied
+  /// as an overlay on top of the image.
   final Gradient? gradient;
 }
